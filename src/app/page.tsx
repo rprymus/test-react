@@ -104,12 +104,12 @@ function TableRow({
   return rows.map((row, rowIndex) => (
     <tr key={rowIndex}>
       {row.map((person: Person) =>
-        headers.map((header, colIndex) =>
+        headers.map((header) =>
           header.component ? (
             <TableCell key={header.name} isClickable={header.name === "name"}>
               <div className="flex justify-center">
                 <header.component
-                  props={rowIndex + colIndex}
+                  props={parseInt(person.url.split("/").slice(-2)[0], 10)}
                   onClick={header.action}
                 />
               </div>
