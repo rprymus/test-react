@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html,
+body {
+  overflow-x: hidden;
+}
+body {
+  position: relative;
+}
+
+.resizable-container {
+  resize: horizontal;
+  border: 1px solid #e2e8f0;
+  overflow: auto;
+  width: 100%;
+  /* min-width: 28rem; */
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+  border: none;
+}
