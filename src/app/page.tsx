@@ -50,6 +50,7 @@ function TableCell({
     </td>
   );
 }
+
 function TableActionCell({
   props,
   onClick,
@@ -155,7 +156,7 @@ function Table({
 }) {
   let table = createRef<HTMLTableElement>();
 
-  const handleResize = () => {
+  const handleDocumentResize = () => {
     prepareResizableTable();
   };
 
@@ -185,10 +186,10 @@ function Table({
     }
 
     prepareResizableTable();
-    addEventListener("resize", () => handleResize());
+    addEventListener("resize", () => handleDocumentResize());
 
     return () => {
-      removeEventListener("resize", () => handleResize());
+      removeEventListener("resize", () => handleDocumentResize());
     };
   }, [isLoading]);
 
