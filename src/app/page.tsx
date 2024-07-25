@@ -160,8 +160,12 @@ function Table({
   };
 
   const prepareResizableTable = () => {
+    if (!table.current) {
+      return;
+    }
+
     const columns = Array.from(
-      table.current?.querySelectorAll("th") as NodeListOf<HTMLElement>,
+      table.current.querySelectorAll("th") as NodeListOf<HTMLElement>,
     ) as HTMLElement[];
 
     columns.map((column) => {
