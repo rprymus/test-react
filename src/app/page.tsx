@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 
 import { fetchPeople } from "@/lib/api";
 
-import { capitalizeFirstLetter } from "@/lib/utils";
+import {
+  capitalizeFirstLetter,
+  addTableResizableColumnEvents,
+} from "@/lib/utils";
 
 import type { Person, TableHeaders } from "@/lib/types";
 
@@ -39,7 +42,7 @@ function TableCell({
 
   return (
     <td
-      className="p-1 @md:p-4 border border-1 text-sm @sm:text-base"
+      className="p-1 md:p-4 border border-1 text-sm sm:text-base"
       style={cellStyle}
       onClick={onCellClick}
     >
@@ -56,7 +59,7 @@ function TableActionCell({
 }) {
   return (
     <button
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 @sm:px-4 rounded"
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 sm:px-4 rounded"
       onClick={() => onClick(props)}
     >
       Details
@@ -73,7 +76,7 @@ function TableHeader({
 }) {
   return (
     <thead>
-      <tr className="bg-gray-300 text-sm @sm:text-base">
+      <tr className="bg-gray-300 text-sm sm:text-base">
         {[...Array(itemsPerRow)].map(() =>
           headers.map((tableHeader) => (
             <th key={tableHeader.name} className="p-1 border border-1">
@@ -150,7 +153,7 @@ function Table({
 }) {
   return (
     <div className={className}>
-      <table>
+      <table className="resizable-table">
         <TableHeader headers={headers} itemsPerRow={itemsPerRow} />
         <TableBody
           people={people}
@@ -182,6 +185,24 @@ export default function Home() {
     },
   ] as TableHeaders;
 
+  const prepareResizableTable = () => {
+    const table = document.querySelector(".resizable-table") as HTMLElement;
+    const columns = Array.from(
+      table.querySelectorAll("th") as NodeListOf<HTMLElement>,
+    ) as HTMLElement[];
+
+    columns.map((column) => {
+      const resizer = document.createElement("div");
+      resizer.classList.add("resizer");
+      resizer.style.height = `${table?.offsetHeight}px`;
+
+      column.appendChild(resizer);
+
+      addTableResizableColumnEvents(column, resizer);
+    });
+  };
+
+  // Fetch people data on component mount
   useEffect(() => {
     setIsLoading(true);
 
@@ -197,27 +218,34 @@ export default function Home() {
     });
   }, []);
 
+  // Prepare resizable table on data fetch
+  useEffect(() => {
+    if (!isLoading) {
+      prepareResizableTable();
+    }
+  }, [isLoading]);
+
   return (
     <main className="flex w-full justify-center h-full p-4 lg:p-12">
-      <div className="flex w-full max-w-screen-2xl justify-center overflow-hidden">
+      <div className="flex w-full max-w-screen-2xl">
         {isLoading ? (
           <div className="w-full flex justify-center text-2xl ">
             Fetching data...
           </div>
         ) : (
-          <div className="resizable-container @container w-full">
+          <>
             <Table
-              className="w-full hidden @5xl:table"
+              className="hidden md:table"
               people={people}
               headers={tableHeaders}
               itemsPerRow={2}
             />
             <Table
-              className="w-full @5xl:hidden"
+              className="md:hidden"
               people={people}
               headers={tableHeaders}
             />
-          </div>
+          </>
         )}
       </div>
     </main>

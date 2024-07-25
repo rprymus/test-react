@@ -20,7 +20,25 @@ body {
 
 table {
   table-layout: fixed;
-  width: 100%;
+  width: auto;
   margin: 0;
   border: none;
+}
+
+table th {
+  position: relative;
+}
+
+.resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  cursor: col-resize;
+  user-select: none;
+}
+
+.resizer:hover,
+.resizer__dragging {
+  border-right: 2px solid blue;
 }
